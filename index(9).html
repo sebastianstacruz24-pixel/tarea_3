@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Consulta de Clientes - Bucle While</title>
+
+    <!-- CSS AGREGADO -->
+
+
+<!--
+• Aplicar CSS. 
+• Dos sugerencias con sustento (explicar los beneficios).
+--->
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f6fc;
+            margin: 0;
+            padding: 40px;
+        }
+
+        h2 {
+            color: #1f4e79;
+        }
+
+        form {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            width: 400px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-top: 8px;
+            border: 1px solid #aaa;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #1f75cb;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #155a9c;
+        }
+
+        #resultadoBusqueda {
+            font-weight: bold;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<!--------------------------------------------------------------------------------------------->
+<body>
+    <h2>Consulta de Cartera de Clientes</h2>
+
+    <form onsubmit="return false;">
+        <label for="clienteBuscarInput">Nombre del Cliente a buscar:</label><br>
+        <input type="text" id="clienteBuscarInput" placeholder="Ej. Carlos Ruiz"><br><br>
+
+        <button type="button" onclick="buscarCliente()">Buscar en Base de Datos</button>
+    </form>
+
+    <p id="resultadoBusqueda"></p>
+
+    <script>
+        // Lista base de clientes registrados en el sistema comercial mediante un array
+        const baseDatosClientes = ["Empresa Alfa", "Juan Perez", "Maria Gomez", "Carlos Ruiz", "Comercial Beta"];
+
+        function buscarCliente()
+        {
+            let clienteBuscado = document.getElementById("clienteBuscarInput").value.trim();
+            let encontrado = false;
+            let i = 0;
+
+            if (clienteBuscado === "")
+            {
+                alert("Escriba un nombre para consultar.");
+                return;
+            }
+
+            // Bucle While: Busca el cliente en el arreglo posición por posición hasta encontrarlo o terminar la lista
+            while (i < baseDatosClientes.length && !encontrado) // mientras no haya llegado al final Y no haya sido encontrado
+            {
+                if (baseDatosClientes[i].toLowerCase() === clienteBuscado.toLowerCase()) //conversión a minúsculas anbos textos
+                {
+                    encontrado = true; // Se activa la bandera para salir del bucle
+                }
+                i++;
+            }
+
+            // Mostramos la respuesta según el resultado del bucle
+            if (encontrado)
+            {
+                document.getElementById("resultadoBusqueda").innerText = "Estado: El cliente '" + clienteBuscado + "' SÍ está registrado en el sistema.";
+            }else
+            {
+                document.getElementById("resultadoBusqueda").innerText = "Estado: El cliente '" + clienteBuscado + "' NO se encuentra en la base de datos.";
+            }
+        }
+    </script>
+</body>
+</html>
+
+
+
+<!--
+
+Las 2 sugerencias 
+
+1.Agregar CSS para mejorar la presentación: que permite que el sistema tenga una apariencia más ordenada, facilitando que el usuario identifique el campo de búsqueda y el botón.
+
+2.Agregar efectos visuales al botón: el efecto hover permite que el botón cambie de color cuando el usuario coloca el cursor sobre él. Esto mejora la interacción y permite identificar visualmente que el botón es un elemento seleccionable.
+
+-->

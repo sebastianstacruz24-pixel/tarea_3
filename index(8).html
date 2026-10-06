@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Cierre de Caja - Bucle While</title>
+
+<!--
+
+• Aplicar CSS 
+• Que permita ingresar el tipo de cambio (costo por dólar). 
+• Mostrar el equivalente en dólares.
+
+-->
+
+
+    <!-- CSS AGREGADO -->
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            margin: 30px;
+        }
+
+        h2 {
+            color: #2563eb;
+        }
+
+        input {
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #aaa;
+            border-radius: 5px;
+        }
+
+        button {
+            padding: 8px 12px;
+            margin-right: 5px;
+            border: none;
+            border-radius: 5px;
+            background-color: #2563eb;
+            color: white;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #1d4ed8;
+        }
+
+        #mensajeVenta {
+            color: green;
+            font-weight: bold;
+        }
+
+        #historialVentas {
+            background-color: white;
+            padding: 15px 30px;
+            border-radius: 5px;
+        }
+
+        #totalCajaTexto {
+            color: #2563eb;
+        }
+
+        #totalDolaresTexto {
+            color: green;
+        }
+    </style>
+</head>
+<body>
+    <h2>Módulo de Caja Diaria</h2>
+    <form onsubmit="return false;">
+
+        <!-- TIPO DE CAMBIO AGREGADO -->
+        <label for="tipoCambio">Tipo de Cambio (S/ por dólar):</label><br>
+        <input type="number" id="tipoCambio" placeholder="Ej. 3.80" step="0.01"><br><br>
+        <!-------------------------------------------------------------------------------->
+
+        <label for="montoInput">Monto de la Venta (S/):</label><br>
+        <input type="number" id="montoInput" placeholder="Ej. 50.50" step="0.01"><br><br>
+
+        <button type="button" onclick="registrarVenta()">Registrar Venta</button>
+        <button type="button" onclick="calcularTotalCaja()">Calcular Total Acumulado</button>
+    </form>
+
+    <p id="mensajeVenta"></p>
+    <h3>Historial de Ventas del Turno:</h3>
+    <ul id="historialVentas"></ul>
+    <h3 id="totalCajaTexto">Total en Caja: S/ 0.00</h3>
+
+    <!-- EQUIVALENTE EN DÓLARES AGREGADO -->
+    <h3 id="totalDolaresTexto">Equivalente en dólares: $0.00</h3>
+
+    <script>
+        let ventasRegistradas = [];
+
+        function registrarVenta() {
+            let monto = parseFloat(document.getElementById("montoInput").value);
+
+            if (isNaN(monto) || monto <= 0) {
+                alert("Ingrese un monto válido mayor a 0.");
+                return;
+            }
+
+            ventasRegistradas.push(monto);
+            document.getElementById("montoInput").value = "";
+            document.getElementById("mensajeVenta").innerText = "Venta de S/ " + monto.toFixed(2) + " registrada.";
+
+            // Mostramos la lista de ventas registradas
+            let lista = document.getElementById("historialVentas");
+            let item = document.createElement("li");
+
+            // TIPO DE CAMBIO AGREGADO
+            let tipoCambio = parseFloat(document.getElementById("tipoCambio").value);
+
+            if (!isNaN(tipoCambio) && tipoCambio > 0) {
+                let dolares = monto / tipoCambio;
+
+                item.innerText = "Venta: S/ " + monto.toFixed(2) + " | Equivalente: $" + dolares.toFixed(2);
+            //-------------------------------------------------------------------------        
+            } else {
+                item.innerText = "Venta: S/ " + monto.toFixed(2);
+            }
+
+            lista.appendChild(item);
+        }
+
+        function calcularTotalCaja() {
+            let total = 0;
+            let i = 0;
+
+            // Bucle While para sumar todos los montos contenidos en la lista de ventas
+            while (i < ventasRegistradas.length) {
+                total += ventasRegistradas[i];
+                i++; // Avanzamos al siguiente elemento
+            }
+
+            document.getElementById("totalCajaTexto").innerText = "Total acumulado en caja: S/ " + total.toFixed(2);
+
+            // EQUIVALENTE EN DÓLARES AGREGADO
+            let tipoCambio = parseFloat(document.getElementById("tipoCambio").value);
+
+            if (!isNaN(tipoCambio) && tipoCambio > 0) {
+                let totalDolares = total / tipoCambio;
+
+                document.getElementById("totalDolaresTexto").innerText = "Equivalente en dólares: $" + totalDolares.toFixed(2);
+            } else {
+                document.getElementById("totalDolaresTexto").innerText = "Equivalente en dólares: Ingrese el tipo de cambio.";
+            }
+        }
+    </script>
+
+</body>
+</html>

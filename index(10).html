@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Reserva de Boletos - Bucle While</title>
+
+<!--
+• Aplicar CSS. 
+• Mejorar permitiendo agregar el nombre, apellidos y edad del pasajero. 
+• Al emitir los boletos (según la cantidad), muestre los datos registrados del (de los) 
+pasajero(s).
+-->
+
+
+
+    <!-- AGREGADO: CSS -->
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #eaf2f8;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h2 {
+            color: #1f618d;
+        }
+
+        form {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            width: 500px;
+            max-width: 90%;
+            box-shadow: 0 0 10px #aaa;
+        }
+
+        input {
+            padding: 8px;
+            border: 1px solid #aaa;
+            border-radius: 5px;
+            margin-top: 5px;
+        }
+
+        button {
+            background-color: #1f618d;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #154360;
+        }
+
+        .pasajero {
+            background-color: #f8f9f9;
+            border: 1px solid #ccc;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 8px;
+        }
+
+        .resultado-pasajero {
+            background-color: #d5f5e3;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <h2>Venta de Pasajes / Boletos</h2>
+    <p>Asientos Disponibles en el Autobús: <strong id="stockBoletos">5</strong></p>
+
+    <form onsubmit="return false;">
+        <label for="cantidadBoletosInput">Cantidad de boletos a comprar:</label><br>
+        <input type="number" id="cantidadBoletosInput" placeholder="Ej. 2" onchange="agregarDatosPasajeros()"><br><br>
+
+        <!-- AGREGADO: aquí aparecerán los datos de los pasajeros -->
+        <div id="datosPasajeros"></div>
+        <!------------------------------------------------------------->
+
+        <button type="button" onclick="procesarReserva()">Emitir Boletos</button>
+    </form>
+
+    <p id="resultadoReserva"></p>
+
+    <script>
+        let asientosDisponibles = 5;
+
+        function procesarReserva()
+        {
+            let solicitados = parseInt(document.getElementById("cantidadBoletosInput").value); //convierte el texto en entero.
+
+            if (isNaN(solicitados) || solicitados <= 0) // para comprobar que ingrese un numero, isNaN compara si no ha ingresado un número.
+            {
+                alert("Ingrese una cantidad válida de boletos.");
+                return;
+            }
+
+            if (solicitados > asientosDisponibles) // máximo 5 boletos por persona como ejemplo
+            {
+                document.getElementById("resultadoReserva").innerText = "No hay suficientes asientos disponibles para procesar esta orden.";
+                return;
+            }
+
+            // AGREGADO: obtener datos de los pasajeros ---------------------------------------------------
+            let datos = "";
+            let contadorPasajeros = 1;
+
+            while (contadorPasajeros <= solicitados)
+            {
+                let nombre = document.getElementById("nombre" + contadorPasajeros).value;
+                let apellidos = document.getElementById("apellidos" + contadorPasajeros).value;
+                let edad = document.getElementById("edad" + contadorPasajeros).value;
+
+
+                // Esta línea sirve para verificar que el usuario haya llenado los datos del pasajero.
+                if (nombre === "" || apellidos === "" || edad === "")
+
+                {
+                    alert("Complete los datos del pasajero " + contadorPasajeros + ".");
+                    return;
+                }
+                
+                // agregando informacion a la varible datos.
+                // <div class='resultado-pasajero'> = crea un bloque donde se mostrarán los datos del pasajero y permite aplicarle CSS
+                // "<strong>Pasajero " + contadorPasajeros + "</strong><br>" = mostrara el numero de pasajeros
+                // strong = texto en negrita
+                datos +=
+                    "<div class='resultado-pasajero'>" +
+                    "<strong>Pasajero " + contadorPasajeros + "</strong><br>" +
+                    "Nombre: " + nombre + "<br>" +
+                    "Apellidos: " + apellidos + "<br>" +
+                    "Edad: " + edad + " años" +
+                    "</div>";
+                
+                //aumentar el contador de pasajeros en 1
+                contadorPasajeros++;
+            }
+            //---------------------------------------------------------------------------------------------
+
+            // Bucle While: Descuenta uno por uno los boletos vendidos hasta completar la solicitud
+            let boletosEmitidos = 0;
+            while (boletosEmitidos < solicitados)
+            {
+                asientosDisponibles--; // Reducimos un asiento del inventario
+                boletosEmitidos++;     // Incrementamos la cuenta de emitidos
+            }
+
+            // Actualizamos la vista HTML con los datos procesados
+            document.getElementById("stockBoletos").innerText = asientosDisponibles;
+
+            // MODIFICACIÓN NECESARIA: se agrega la información de pasajeros
+            document.getElementById("resultadoReserva").innerHTML = "Compra exitosa. Se han emitido " + solicitados + " boleto(s).<br><br>" + "<strong>Datos de los pasajeros:</strong><br>" + datos;
+
+            document.getElementById("cantidadBoletosInput").value = "";
+
+            // AGREGADO: limpiar los datos de pasajeros
+            document.getElementById("datosPasajeros").innerHTML = "";
+
+            if (asientosDisponibles === 0)
+            {
+                document.getElementById("resultadoReserva").innerText += " (¡Atención: Se han agotado todos los asientos!)";
+            }
+        }
+
+
+        // AGREGADO: crea los campos de los pasajeros
+        function agregarDatosPasajeros()
+        {
+            let cantidad = parseInt(document.getElementById("cantidadBoletosInput").value);
+
+            let contenedor = document.getElementById("datosPasajeros"); contenedor.innerHTML = "";
+            
+            // sirve para verificar que la cantidad de boletos ingresada sea válida.
+            if (isNaN(cantidad) || cantidad <= 0)
+            {
+                return;
+            }
+
+            let contador = 1;
+
+            while (contador <= cantidad)
+            {
+                // innerHTML = sirve para agregar o cambiar contenido HTML dentro de un elemento de la página.
+                contenedor.innerHTML +=
+
+                    // Están entre comillas porque JavaScript está tratando ese contenido como texto (un string).
+
+                    //  Crea el bloque del pasajero
+                    "<div class='pasajero'>" +
+                    
+                    // Mostrar el número del pasajero
+                    "<strong>Pasajero " + contador + "</strong><br><br>" +
+                    
+                    //  Crea el campo Nombre
+                    "<label>Nombre:</label><br>" +
+                    "<input type='text' id='nombre" + contador +
+                    "' placeholder='Ingrese nombre'><br><br>" +
+                    
+                    // Crea el campo Apellidos
+                    "<label>Apellidos:</label><br>" +
+                    "<input type='text' id='apellidos" + contador +
+                    "' placeholder='Ingrese apellidos'><br><br>" +
+                    
+                    // Crear el campo Edad
+                    "<label>Edad:</label><br>" +
+                    "<input type='number' id='edad" + contador +
+                    "' placeholder='Ingrese edad'><br>" +
+
+                    "</div>";
+
+                contador++;
+            }
+        }
+    </script>
+</body>
+</html>
